@@ -1,0 +1,43 @@
+xquery version "3.1";
+
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+let $topic := request:get-parameter("topic", "")
+let $sessions := doc("schedule.xml")/schedule/session[topic = $topic]
+return
+<html>
+<head>
+    <title>Schedule for {$topic}</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Schedule for {$topic}</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Lecturer</th>
+        </tr>
+        {
+            for $session in $sessions
+            return
+            <tr>
+                <td>{$session/@date}</td>
+                <td>{$session/lecturer}</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
